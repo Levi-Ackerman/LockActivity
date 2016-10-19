@@ -10,26 +10,28 @@ import android.widget.Toast;
 
 public class HomeActivity extends Activity {
 
-    boolean needFinish = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent in = getIntent();
         if (in == null || !Common.JUMP_FROM_SCREEN_LISTENER.equals(in.getStringExtra(Common.JUMP_FROM))) {
-            jumpToDesktop();
-            return;
-        }
-        setContentView(R.layout.activity_home);
-        findViewById(R.id.btn_unlock).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                jumpToDesktop();
+            //不是亮屏监听器启动的
+            if (!LockApplication.getApp().isLockActivity()){
+                //锁屏界面不在前台
+                jumpToDesktop();//跳到真正的桌面
+                finish();
+                return ;
             }
-        });
+        }
+        jumpToLockActivity();
     }
+
+    private void jumpToLockActivity() {
+        startActivity(new Intent(this,LockActivity.class));
+        finish();
+    }
+
     private void jumpToDesktop() {
-        needFinish = true;
         String packageName = Util.getStringFromPreference(getApplicationContext(),Common.PACKAGE_NAME,null);
         String activityName = Util.getStringFromPreference(getApplicationContext(),Common.ACTIVITY_NAME,null);
         if (packageName == null || activityName == null){
@@ -39,28 +41,6 @@ public class HomeActivity extends Activity {
         Intent in = new Intent();
         in.setComponent(new ComponentName(packageName,activityName));
         startActivity(in);
-        finish();
-    }
-    @Override
-    protected void onUserLeaveHint() {
-        Log.i("Lee..","on user leave hint");
-//        super.onUserLeaveHint();
-        if (!needFinish) {
-            restartActivity();
-        }
-    }
-    @Override
-    public void onBackPressed() {
-
     }
 
-
-    private void restartActivity() {
-        try {
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

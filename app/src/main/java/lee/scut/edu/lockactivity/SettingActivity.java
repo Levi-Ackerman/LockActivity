@@ -1,12 +1,10 @@
 package lee.scut.edu.lockactivity;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +13,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class SettingActivity extends Activity {
     ListView mLauncherList;
     List<BaseLauncher> mLaunchers;
 
@@ -28,7 +25,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_setting);
         mLauncherList = (ListView) findViewById(R.id.lt_launcher);
         startService(new Intent(this, ScreenOnListenerService.class));
 
@@ -58,8 +55,6 @@ public class MainActivity extends Activity {
                 Util.saveToPreference(getApplicationContext(), Common.ACTIVITY_NAME, launcher.activityName);
             }
         });
-
-
     }
     private BaseAdapter mAdapter = new BaseAdapter() {
         @Override
@@ -82,7 +77,7 @@ public class MainActivity extends Activity {
             LauncherView view;
             if (convertView == null){
                 view = new LauncherView();
-                convertView = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_launcher,null);
+                convertView = LayoutInflater.from(SettingActivity.this).inflate(R.layout.item_launcher,null);
                 view.icon = (ImageView) convertView.findViewById(R.id.item_launcher_img);
                 view.name = (TextView) convertView.findViewById(R.id.item_launcher_name);
                 convertView.setTag(view);
