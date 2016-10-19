@@ -23,24 +23,14 @@ import java.util.List;
 public class MainActivity extends Activity {
     ListView mLauncherList;
     List<BaseLauncher> mLaunchers;
-    boolean needFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent in = getIntent();
-        if (in != null){
-            String from = in.getStringExtra(Common.JUMP_FROM);
-            if (Common.JUMP_FROM_SCREEN_LISTENER.equals(from)){
-                jumpToDesktop();
-                return ;
-            }
-        }
+
         setContentView(R.layout.activity_main);
         mLauncherList = (ListView) findViewById(R.id.lt_launcher);
-        startService(new Intent(this,ScreenOnListenerService.class));
-        Toast.makeText(this,"是锁屏界面在顶层,"+LockApplication.getApp().isLockActivity(),Toast.LENGTH_SHORT).show();
-        Log.i("lee..",LockApplication.getApp().isLockActivity()+"");
+        startService(new Intent(this, ScreenOnListenerService.class));
 
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
@@ -50,7 +40,7 @@ public class MainActivity extends Activity {
 
         for (ResolveInfo info : resolveInfos) {
             String packageName = info.activityInfo.packageName;
-            if (!getPackageName().equals(packageName)){
+            if (!getPackageName().equals(packageName)) {
                 BaseLauncher launcher = new BaseLauncher();
                 launcher.icon = info.loadIcon(getPackageManager());
                 launcher.label = info.loadLabel(getPackageManager());
@@ -64,66 +54,12 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BaseLauncher launcher = mLaunchers.get(position);
-                Util.saveToPreference(getApplicationContext(),Common.PACKAGE_NAME,launcher.packageName);
-                Util.saveToPreference(getApplicationContext(),Common.ACTIVITY_NAME,launcher.activityName);
+                Util.saveToPreference(getApplicationContext(), Common.PACKAGE_NAME, launcher.packageName);
+                Util.saveToPreference(getApplicationContext(), Common.ACTIVITY_NAME, launcher.activityName);
             }
         });
 
-        findViewById(R.id.btn_unlock).setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View v) {
-                jumpToDesktop();
-            }
-        });
-    }
-
-    private void jumpToDesktop() {
-        needFinish = true;
-        String packageName = Util.getStringFromPreference(getApplicationContext(),Common.PACKAGE_NAME,null);
-        String activityName = Util.getStringFromPreference(getApplicationContext(),Common.ACTIVITY_NAME,null);
-        if (packageName == null || activityName == null){
-            Toast.makeText(getApplicationContext(),"还没有选择你解锁后想进入的桌面",Toast.LENGTH_SHORT);
-            return ;
-        }
-        Intent in = new Intent();
-        in.setComponent(new ComponentName(packageName,activityName));
-        startActivity(in);
-        finish();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LockApplication.getApp().setLockActivity(true);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LockApplication.getApp().setLockActivity(false);
-    }
-
-    @Override
-    public void onBackPressed() {
-
-    }
-
-    @Override
-    protected void onUserLeaveHint() {
-        Log.i("Lee..","on user leave hint");
-//        super.onUserLeaveHint();
-        if (!needFinish) {
-            restartActivity();
-        }
-    }
-    private void restartActivity() {
-        try {
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     private BaseAdapter mAdapter = new BaseAdapter() {
         @Override

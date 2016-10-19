@@ -27,7 +27,7 @@ public class ScreenOnListenerService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())){
-                Intent in = new Intent(context,MainActivity.class);
+                Intent in = new Intent(context,HomeActivity.class);
                 in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 in.putExtra(Common.JUMP_FROM,Common.JUMP_FROM_SCREEN_LISTENER);
                 startActivity(in);
