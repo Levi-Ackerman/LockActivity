@@ -19,15 +19,16 @@ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 
 public class HomeActivity extends Activity {
 
-    boolean needFinish = false;
+//    boolean needFinish = false; //防止失去焦点的activity重启
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent in = getIntent();
         if (in == null || !Common.JUMP_FROM_SCREEN_LISTENER.equals(in.getStringExtra(Common.JUMP_FROM))) {
-            jumpToDesktop();
+            finish();
             return;
         }
+        setTheme(android.R.style.Theme_Holo_Light_NoActionBar);
         getWindow().setFlags(0x00020000,0x00020000);
         getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(FLAG_DISMISS_KEYGUARD);
@@ -37,12 +38,13 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                jumpToDesktop();
+//                jumpToDesktop();
+                finish();
             }
         });
     }
     private void jumpToDesktop() {
-        needFinish = true;
+//        needFinish = true;
         String packageName = Util.getStringFromPreference(getApplicationContext(),Common.PACKAGE_NAME,null);
         String activityName = Util.getStringFromPreference(getApplicationContext(),Common.ACTIVITY_NAME,null);
         if (packageName == null || activityName == null){
@@ -54,17 +56,6 @@ public class HomeActivity extends Activity {
         startActivity(in);
         finish();
     }
-    @Override
-    protected void onUserLeaveHint() {
-        Log.i("Lee..","on user leave hint");
-//        sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-        if (!needFinish) {
-//            restartActivity();
-//            ActivityManager activityManager = (ActivityManager) getApplicationContext()
-//                    .getSystemService(Context.ACTIVITY_SERVICE);
-//            activityManager.moveTaskToFront(getTaskId(), 0);
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -75,15 +66,9 @@ public class HomeActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (!hasFocus){
-            Intent intent = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+            Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             intent.putExtra("reason", "globalactions");
             sendBroadcast(intent);
         }
-    }
-
-    private void restartActivity() {
-        Log.i("Lee..","restart Activity");
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
     }
 }

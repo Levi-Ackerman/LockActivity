@@ -24,6 +24,7 @@ import java.util.List;
 public class MainActivity extends Activity {
     ListView mLauncherList;
     List<BaseLauncher> mLaunchers;
+    String TAG = "lee..";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class MainActivity extends Activity {
                 Util.saveToPreference(getApplicationContext(), Common.ACTIVITY_NAME, launcher.activityName);
             }
         });
-
+        getDefaultHome();
 
     }
     private BaseAdapter mAdapter = new BaseAdapter() {
@@ -99,5 +100,22 @@ public class MainActivity extends Activity {
     class LauncherView{
         ImageView icon;
         TextView name;
+    }
+    private void getDefaultHome() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        final ResolveInfo res = getPackageManager().resolveActivity(intent, 0);
+        if (res.activityInfo == null) {
+            Log.d(TAG, "resolveActivity--->activityInfo null");
+            // should not happen. A home is always installed, isn't it?
+        } else if (res.activityInfo.packageName.equals("android")) {
+            // No default selected
+            Log.d(TAG, "resolveActivity--->无默认设置");
+        } else {
+            // res.activityInfo.packageName and res.activityInfo.name gives
+            // you the default app
+            Log.d(TAG, "默认桌面为：" + res.activityInfo.packageName + "."
+                    + res.activityInfo.name);
+        }
     }
 }
