@@ -11,7 +11,14 @@
     tools:context="lee.scut.edu.lockactivity.MainActivity">
 
     <ListView
+        android:layout_above="@+id/btn_unlock"
         android:id="@+id/lt_launcher"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btn_unlock"
+        android:text="解锁"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

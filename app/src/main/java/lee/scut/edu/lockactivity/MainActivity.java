@@ -5,33 +5,37 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends Activity {
     ListView mLauncherList;
-    List<BaseLauncher> launchers;
+    List<BaseLauncher> mLaunchers;
+    boolean needFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent in = getIntent();
+        if (in != null){
+            String from = in.getStringExtra(Common.JUMP_FROM);
+            if (Common.JUMP_FROM_SCREEN_LISTENER.equals(from)){
+                jumpToDesktop();
+                return ;
+            }
+        }
         setContentView(R.layout.activity_main);
         mLauncherList = (ListView) findViewById(R.id.lt_launcher);
         startService(new Intent(this,ScreenOnListenerService.class));
@@ -42,19 +46,50 @@ public class MainActivity extends Activity {
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        launchers = new ArrayList<BaseLauncher>();
+        mLaunchers = new ArrayList<BaseLauncher>();
 
         for (ResolveInfo info : resolveInfos) {
             String packageName = info.activityInfo.packageName;
             if (!getPackageName().equals(packageName)){
                 BaseLauncher launcher = new BaseLauncher();
                 launcher.icon = info.loadIcon(getPackageManager());
-                launcher.name = info.loadLabel(getPackageManager());
+                launcher.label = info.loadLabel(getPackageManager());
                 launcher.packageName = packageName;
-                launchers.add(launcher);
+                launcher.activityName = info.activityInfo.name;
+                mLaunchers.add(launcher);
             }
         }
         mLauncherList.setAdapter(mAdapter);
+        mLauncherList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BaseLauncher launcher = mLaunchers.get(position);
+                Util.saveToPreference(getApplicationContext(),Common.PACKAGE_NAME,launcher.packageName);
+                Util.saveToPreference(getApplicationContext(),Common.ACTIVITY_NAME,launcher.activityName);
+            }
+        });
+
+        findViewById(R.id.btn_unlock).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                jumpToDesktop();
+            }
+        });
+    }
+
+    private void jumpToDesktop() {
+        needFinish = true;
+        String packageName = Util.getStringFromPreference(getApplicationContext(),Common.PACKAGE_NAME,null);
+        String activityName = Util.getStringFromPreference(getApplicationContext(),Common.ACTIVITY_NAME,null);
+        if (packageName == null || activityName == null){
+            Toast.makeText(getApplicationContext(),"还没有选择你解锁后想进入的桌面",Toast.LENGTH_SHORT);
+            return ;
+        }
+        Intent in = new Intent();
+        in.setComponent(new ComponentName(packageName,activityName));
+        startActivity(in);
+        finish();
     }
 
     @Override
@@ -75,21 +110,14 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.i("lee..key down",keyCode+"");
-        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH){
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     protected void onUserLeaveHint() {
         Log.i("Lee..","on user leave hint");
 //        super.onUserLeaveHint();
-        exitAction();
+        if (!needFinish) {
+            restartActivity();
+        }
     }
-    private void exitAction() {
+    private void restartActivity() {
         try {
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
@@ -100,12 +128,12 @@ public class MainActivity extends Activity {
     private BaseAdapter mAdapter = new BaseAdapter() {
         @Override
         public int getCount() {
-            return launchers.size();
+            return mLaunchers.size();
         }
 
         @Override
         public BaseLauncher getItem(int position) {
-            return launchers.get(position);
+            return mLaunchers.get(position);
         }
 
         @Override
@@ -127,7 +155,7 @@ public class MainActivity extends Activity {
             }
             BaseLauncher launcher = getItem(position);
             view.icon.setImageDrawable(launcher.icon);
-            view.name.setText(launcher.name);
+            view.name.setText(launcher.label);
             return convertView;
         }
     };

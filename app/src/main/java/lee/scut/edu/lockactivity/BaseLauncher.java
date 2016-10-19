@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 
 public class BaseLauncher {
     Drawable icon;
-    CharSequence name;
+    CharSequence label;
     String packageName;
+    public String activityName;
 }
