@@ -28,7 +28,7 @@ public class HomeActivity extends Activity {
             finish();
             return;
         }
-        setTheme(android.R.style.Theme_Holo_Light_NoActionBar);
+//        setTheme(android.R.style.Theme_Wallpaper_NoTitleBar);
         getWindow().setFlags(0x00020000,0x00020000);
         getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(FLAG_DISMISS_KEYGUARD);
