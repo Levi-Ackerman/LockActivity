@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import static android.view.WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW;
 import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 import static android.view.WindowManager.LayoutParams.TYPE_PHONE;
@@ -19,7 +20,6 @@ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 
 public class HomeActivity extends Activity {
 
-//    boolean needFinish = false; //防止失去焦点的activity重启
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,23 +28,20 @@ public class HomeActivity extends Activity {
             finish();
             return;
         }
-//        setTheme(android.R.style.Theme_Wallpaper_NoTitleBar);
         getWindow().setFlags(0x00020000,0x00020000);
         getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(FLAG_DISMISS_KEYGUARD);
-        getWindow().setType(TYPE_SYSTEM_ALERT);
         setContentView(R.layout.activity_home);
         findViewById(R.id.btn_unlock).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-//                jumpToDesktop();
                 finish();
             }
         });
     }
+    @Deprecated
     private void jumpToDesktop() {
-//        needFinish = true;
         String packageName = Util.getStringFromPreference(getApplicationContext(),Common.PACKAGE_NAME,null);
         String activityName = Util.getStringFromPreference(getApplicationContext(),Common.ACTIVITY_NAME,null);
         if (packageName == null || activityName == null){
@@ -59,13 +56,14 @@ public class HomeActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
+        //不响应返回键
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (!hasFocus){
+            //在recent按下时 发送一个recent事件 使recent失效
             Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             intent.putExtra("reason", "globalactions");
             sendBroadcast(intent);
