@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 public class ScreenOnListenerService extends Service {
+    TelephonyManager telephonyManager;
     public ScreenOnListenerService() {
     }
 
@@ -20,6 +23,24 @@ public class ScreenOnListenerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerReceiver(receiver,new IntentFilter(Intent.ACTION_SCREEN_ON));
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(new PhoneStateListener(){
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                super.onCallStateChanged(state, incomingNumber);
+                switch (state){
+                    case TelephonyManager.CALL_STATE_IDLE:
+                        //空闲
+                        break;
+                    case TelephonyManager.CALL_STATE_RINGING:
+                        //响铃
+                        break;
+                    case TelephonyManager.CALL_STATE_OFFHOOK:
+                        //挂机
+                        break;
+                }
+            }
+        },PhoneStateListener.LISTEN_CALL_STATE);
         return super.onStartCommand(intent, flags, startId);
     }
 
