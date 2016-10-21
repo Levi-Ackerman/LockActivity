@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    tools:context="lee.scut.edu.lockactivity.MainActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="lee.scut.edu.lockactivity.MainActivity">
+    android:layout_height="match_parent">
 
-    <ListView
-        android:choiceMode="singleChoice"
-        android:layout_above="@+id/btn_unlock"
-        android:id="@+id/lt_launcher"
-        android:visibility="gone"
+    <LinearLayout
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:text="为了功能正常使用,请先设置"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:text="设置'我的锁屏'为默认锁屏"
-        android:id="@+id/set_default_launcher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <ListView
+            android:id="@+id/lt_launcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_unlock"
+            android:choiceMode="singleChoice"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="为了功能正常使用,请先设置" />
+
+        <Button
+            android:id="@+id/set_default_launcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置'我的锁屏'为默认锁屏" />
+
+        <Button
+            android:id="@+id/getShortcut"
+            android:text="获取快捷方式"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

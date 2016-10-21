@@ -35,6 +35,16 @@ public class MainActivity extends Activity {
                 setDefaultHome();
             }
         });
+        findViewById(R.id.getShortcut).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getShortcut();
+            }
+        });
+    }
+
+    private void getShortcut() {
+
     }
 
     /**
