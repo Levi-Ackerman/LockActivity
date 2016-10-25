@@ -1,11 +1,9 @@
 package lee.scut.edu.lockactivity;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
@@ -32,19 +30,6 @@ public class HomeActivity extends Activity {
                 finish();
             }
         });
-    }
-    @Deprecated
-    private void jumpToDesktop() {
-        String packageName = Util.getStringFromPreference(getApplicationContext(),Common.PACKAGE_NAME,null);
-        String activityName = Util.getStringFromPreference(getApplicationContext(),Common.ACTIVITY_NAME,null);
-        if (packageName == null || activityName == null){
-            Toast.makeText(getApplicationContext(),"还没有选择你解锁后想进入的桌面",Toast.LENGTH_SHORT);
-            return ;
-        }
-        Intent in = new Intent();
-        in.setComponent(new ComponentName(packageName,activityName));
-        startActivity(in);
-        finish();
     }
 
     @Override

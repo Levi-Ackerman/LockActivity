@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    ListView mLauncherList;
-    List<BaseLauncher> mLaunchers;
     String TAG = "lee..";
 
     @Override
@@ -35,93 +33,10 @@ public class MainActivity extends Activity {
                 setDefaultHome();
             }
         });
-        findViewById(R.id.getShortcut).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getShortcut();
-            }
-        });
     }
 
-    private void getShortcut() {
 
-    }
 
-    /**
-     * 用一个列表展示出所有Launcher(不包括我们的锁屏Activity)
-     * 让用户选择解锁后进入的桌面,方便我们的锁屏Activity做跳转
-     * 已经废弃,因为直接finish掉锁屏应用就可以进入到桌面了
-     */
-    @Deprecated
-    private void chooseRealLauncher() {
-        mLauncherList = (ListView) findViewById(R.id.lt_launcher);
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        mLaunchers = new ArrayList<BaseLauncher>();
-
-        for (ResolveInfo info : resolveInfos) {
-            String packageName = info.activityInfo.packageName;
-            if (!getPackageName().equals(packageName)) {
-                BaseLauncher launcher = new BaseLauncher();
-                launcher.icon = info.loadIcon(getPackageManager());
-                launcher.label = info.loadLabel(getPackageManager());
-                launcher.packageName = packageName;
-                launcher.activityName = info.activityInfo.name;
-                mLaunchers.add(launcher);
-            }
-        }
-        mLauncherList.setAdapter(mAdapter);
-        mLauncherList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BaseLauncher launcher = mLaunchers.get(position);
-                Util.saveToPreference(getApplicationContext(), Common.PACKAGE_NAME, launcher.packageName);
-                Util.saveToPreference(getApplicationContext(), Common.ACTIVITY_NAME, launcher.activityName);
-            }
-        });
-    }
-
-    private BaseAdapter mAdapter = new BaseAdapter() {
-        @Override
-        public int getCount() {
-            return mLaunchers.size();
-        }
-
-        @Override
-        public BaseLauncher getItem(int position) {
-            return mLaunchers.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getCount();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LauncherView view;
-            if (convertView == null){
-                view = new LauncherView();
-                convertView = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_launcher,null);
-                view.icon = (ImageView) convertView.findViewById(R.id.item_launcher_img);
-                view.name = (TextView) convertView.findViewById(R.id.item_launcher_name);
-                convertView.setTag(view);
-            }else{
-                view = (LauncherView) convertView.getTag();
-            }
-            BaseLauncher launcher = getItem(position);
-            view.icon.setImageDrawable(launcher.icon);
-            view.name.setText(launcher.label);
-            return convertView;
-        }
-    };
-
-    class LauncherView{
-        ImageView icon;
-        TextView name;
-    }
     private void setDefaultHome() {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
