@@ -20,7 +20,7 @@
 
 ## 演示
 
-![演示图](http://www.lizhengxian.top/LockActivity/debug_apk/lock_activity.gif)
+![演示图](http://www.lizhengxian.top/img/lock_activity.gif)
 
 ## 测试包
 
