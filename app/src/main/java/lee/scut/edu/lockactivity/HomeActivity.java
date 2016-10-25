@@ -19,9 +19,7 @@ public class HomeActivity extends Activity {
             finish();
             return;
         }
-        getWindow().setFlags(0x00020000,0x00020000);
-        getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(FLAG_DISMISS_KEYGUARD);
+        getWindow().addFlags(0x00020000|FLAG_SHOW_WHEN_LOCKED|FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.activity_home);
         findViewById(R.id.btn_unlock).setOnClickListener(new View.OnClickListener() {
 
