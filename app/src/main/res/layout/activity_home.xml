@@ -14,7 +14,7 @@
     <Button
         android:id="@+id/btn_unlock"
         android:text="解锁"
-        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </RelativeLayout>

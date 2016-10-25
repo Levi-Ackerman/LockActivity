@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -25,6 +26,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
     Button mSetLauncherBtn;
     Button mClearLauncherBtn;
     Button mClearSystemLock;
+    TextView mResultTv;
 
     String currentLauncherPackageName ;
 
@@ -43,6 +45,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
         mClearSystemLock = (Button)findViewById(R.id.clear_system_lock);
         mClearSystemLock.setOnClickListener(this);
 
+        mResultTv = (TextView)findViewById(R.id.show_result);
         mLockSwitch.setChecked(getPreferences(MODE_PRIVATE).getBoolean(Common.LOCK_SWITCH,true));
         initBtnByDefaultLauncher();
         initBtnBySystemLock();
@@ -79,6 +82,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
                     + res.activityInfo.name);
             mClearLauncherBtn.setEnabled(false);
             mSetLauncherBtn.setEnabled(false);
+            mResultTv.setVisibility(View.VISIBLE);
         } else {
             Log.d(TAG, "默认桌面为其他的锁屏应用：" + res.activityInfo.packageName + "."
                     + res.activityInfo.name);
