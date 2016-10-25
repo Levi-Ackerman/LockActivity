@@ -20,7 +20,7 @@
         </activity>
 
         <service
-            android:name=".ScreenOnListenerService"
+            android:name=".ScreenListenerService"
             android:enabled="true"
             android:exported="true" />
 

@@ -15,6 +15,17 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+        <Switch
+            android:id="@+id/lock_switch"
+            android:text="开启锁屏"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_margin="5dp"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -22,10 +33,32 @@
             android:text="为了功能正常使用,请先设置" />
 
         <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/clear_default_launcher"
+            android:text="1、清除默认桌面设置"
+            android:layout_width="match_parent"
+            android:enabled="false"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginTop="10dp"
             android:id="@+id/set_default_launcher"
             android:layout_width="match_parent"
+            android:enabled="false"
             android:layout_height="wrap_content"
-            android:text="设置'我的锁屏'为默认锁屏" />
+            android:text="2、设置'我的锁屏'为默认桌面" />
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/clear_system_lock"
+            android:layout_width="match_parent"
+            android:enabled="false"
+            android:layout_height="wrap_content"
+            android:text="3、清除系统锁屏" />
 
+        <TextView
+            android:text="设置成功,现在可以关闭屏幕体验锁屏了"
+            android:layout_marginTop="10dp"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </ScrollView>
