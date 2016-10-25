@@ -26,6 +26,7 @@
 
         <activity android:name=".HomeActivity"
             android:excludeFromRecents="true"
+            android:noHistory="true"
             android:theme="@android:style/Theme.Wallpaper.NoTitleBar"
             android:launchMode="singleInstance">
             <intent-filter>
