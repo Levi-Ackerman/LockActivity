@@ -18,7 +18,7 @@
 
 ## 测试包
 
-debug测试包[点击下载](/debug_apk/app-debug.apk)
+debug测试包[点击下载](http://www.lizhengxian.top/LockActivity/debug_apk/app-debug.apk)
 
 ## License
 
